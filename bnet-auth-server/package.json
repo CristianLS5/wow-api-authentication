@@ -1,0 +1,19 @@
+{
+  "name": "bnet-oauth2",
+  "version": "1.0.0",
+  "description": "Battle.net OAuth2 authentication library",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "dotenv": "^10.0.0",
+    "axios": "^0.24.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+} 
