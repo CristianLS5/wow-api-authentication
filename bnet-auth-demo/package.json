@@ -1,0 +1,16 @@
+{
+  "name": "bnet-auth-demo",
+  "version": "1.0.0",
+  "description": "Battle.net Authentication Demo Frontend",
+  "private": true,
+  "scripts": {
+    "start": "serve -s .",
+    "dev": "serve -s . -l 4200"
+  },
+  "dependencies": {
+    "vanilla-cookieconsent": "^3.0.1"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
