@@ -15,17 +15,19 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         maxAge: 60 * 60 * 1000 // 1 hour by default
     }
 }));
 
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
+    origin: ['https://wow-api-authentication.vercel.app', 'http://localhost:4200'],
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
@@ -111,6 +113,11 @@ app.get('/wow/character', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch character data' });
     }
+});
+
+// Health check endpoint
+app.get('/', (req, res) => {
+    res.json({ status: 'Server is running' });
 });
 
 app.listen(port, () => {
