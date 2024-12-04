@@ -29,7 +29,9 @@ app.use(cookieParser());
 app.use((req, res, next) => {
     const allowedOrigins = [
         'https://wow-api-authentication.vercel.app',
-        'https://wow-api-authentication-server.vercel.app'
+        'https://wow-api-authentication-server.vercel.app',
+        'http://localhost:4200',
+        'http://localhost:3000'
     ];
     
     const origin = req.headers.origin;
