@@ -23,12 +23,20 @@ app.use(session({
 }));
 
 app.use(cookieParser());
-app.use(cors({
-    origin: ['https://wow-api-authentication.vercel.app', 'http://localhost:4200'],
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+
+// CORS configuration
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://wow-api-authentication.vercel.app');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    next();
+});
 
 app.use(express.json());
 
