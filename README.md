@@ -20,23 +20,33 @@ Before you begin, ensure you have:
 ## Installation
 
 1. Clone the repository: 
-    git clone https://github.com/CristianLS5/wow-api-authentication.git
+
+```bash
+git clone https://github.com/CristianLS5/wow-api-authentication.git
+```
 
 2. Install dependencies for both server and demo app:
-Install server dependencies
-    cd bnet-auth-server
-    npm install
-Install demo app dependencies
-    cd ../bnet-auth-demo
-    npm install
+
+```bash
+# Install server dependencies
+cd bnet-auth-server
+npm install
+
+# Install demo app dependencies
+cd ../bnet-auth-demo
+npm install
+```
 
 3. Create a `.env` file in the `bnet-auth-server` directory:
-    BNET_CLIENT_ID=your_client_id
-    BNET_CLIENT_SECRET=your_client_secret
-    BNET_REDIRECT_URI=http://localhost:3000/auth/callback
-    FRONTEND_URL=http://localhost:4200
-    BNET_REGION=eu
-    SESSION_SECRET=your_session_secret
+
+```env
+BNET_CLIENT_ID=your_client_id
+BNET_CLIENT_SECRET=your_client_secret
+BNET_REDIRECT_URI=http://localhost:3000/auth/callback
+FRONTEND_URL=http://localhost:4200
+BNET_REGION=eu
+SESSION_SECRET=your_session_secret
+```
 
 ## Usage
 
