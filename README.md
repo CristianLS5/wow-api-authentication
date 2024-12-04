@@ -138,7 +138,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-Cristian López Segarra - [@LinkedIn](https://www.linkedin.com/in/cristian-l%C3%B3pez-sol%C3%A1-2b6493204/?locale=en_US) - [Portfolio](https://cristianlopez.netlify.app)
+Cristian López Solà - [@LinkedIn](https://www.linkedin.com/in/cristian-l%C3%B3pez-sol%C3%A1-2b6493204/?locale=en_US) - [Portfolio](https://cristianlopez.netlify.app)
 
 Project Link: [https://github.com/CristianLS5/wow-api-authentication](https://github.com/CristianLS5/wow-api-authentication)
 
