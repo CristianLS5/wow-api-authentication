@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Protected Page</title>
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Protected Page</h1>
+        
+        <div class="header-actions">
+            <button onclick="logout()" class="logout-button">Logout</button>
+            <button type="button" data-cc="show-preferencesModal">Cookie Settings</button>
+            <button onclick="window.location.href='cookie-test.html'" class="nav-button">Cookie Test Page</button>
+        </div>
+
+        <div class="character-section">
+            <h2>WoW Character Profile</h2>
+            <button onclick="fetchCharacterProfile()" class="fetch-button">
+                Fetch Thenift@Sanguino
+            </button>
+            <div id="characterData" class="character-data"></div>
+        </div>
+    </div>
+
+    <script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.umd.js"></script>
+    <script defer src="js/cookie-config.js"></script>
+    <script>
+        window.onload = async function() {
+            try {
+                const response = await fetch('http://localhost:3000/auth/check', {
+                    credentials: 'include'
+                });
+                const { isAuthenticated } = await response.json();
+                
+                if (!isAuthenticated) {
+                    window.location.replace('/index.html');
+                    return;
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                window.location.replace('/index.html');
+            }
+        }
+
+        async function fetchCharacterProfile() {
+            try {
+                const response = await fetch('http://localhost:3000/wow/character', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                
+                const characterDiv = document.getElementById('characterData');
+                if (response.ok) {
+                    characterDiv.innerHTML = `
+                        <h3>${data.name}</h3>
+                        <p>Level: ${data.level}</p>
+                        <p>Race: ${data.race.name}</p>
+                        <p>Class: ${data.character_class.name}</p>
+                        <p>Realm: ${data.realm.name}</p>
+                    `;
+                } else {
+                    characterDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error('Failed to fetch character:', error);
+                document.getElementById('characterData').innerHTML = 
+                    '<p class="error">Failed to fetch character data</p>';
+            }
+        }
+
+        function logout() {
+            window.location.href = 'http://localhost:3000/auth/logout';
+        }
+    </script>
+</body>
+</html> 

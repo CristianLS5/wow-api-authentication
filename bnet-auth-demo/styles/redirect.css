@@ -1,0 +1,166 @@
+body {
+    background-color: #f0f2f5;  /* Light gray-blue background */
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.session-type {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.session-type.persistent {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #1565c0;
+}
+
+.session-type.temporary {
+    background-color: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid #ef6c00;
+}
+
+.session-type.memory {
+    background-color: #f5f5f5;
+    color: #616161;
+    border: 1px solid #616161;
+}
+
+.token-info {
+    padding: 20px;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.success {
+    background-color: #e8f5e9;
+    border: 1px solid #4caf50;
+    color: #2e7d32;
+}
+
+.error {
+    background-color: #ffebee;
+    border: 1px solid #ef5350;
+    color: #c62828;
+}
+
+.warning {
+    background-color: #fff3e0;
+    border: 1px solid #ff9800;
+    color: #ef6c00;
+}
+
+.token-details {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.progress-steps {
+    margin: 20px 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    opacity: 0.5;
+}
+
+.step.active {
+    opacity: 1;
+}
+
+.step-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.step.completed .step-icon {
+    background: #4caf50;
+    color: white;
+}
+
+.step.error .step-icon {
+    background: #ef5350;
+    color: white;
+}
+
+.step-text {
+    flex-grow: 1;
+}
+
+.storage-info {
+    margin-top: 20px;
+    font-style: italic;
+    color: #666;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.logout-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
+.logout-icon {
+    font-size: 16px;
+}
+
+body.persistent-session {
+    background-color: #e8f5e9;  /* Light green background */
+}
+
+.persistent-banner {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.persistent-banner .icon {
+    font-size: 24px;
+} 
