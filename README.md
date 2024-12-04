@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-+ <a name="readme-top"></a>
-+ 
-+ [![Contributors][contributors-shield]][contributors-url]
-+ [![Forks][forks-shield]][forks-url]
-+ [![Stargazers][stars-shield]][stars-url]
-+ [![Issues][issues-shield]][issues-url]
-+ [![MIT License][license-shield]][license-url]
-+ [![LinkedIn][linkedin-shield]][linkedin-url]
-+ 
-=======
 <a name="readme-top"></a>
 
 [![Contributors][contributors-shield]][contributors-url]
@@ -18,7 +7,6 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
->>>>>>> 6bbe4bef28824026c14136a15f096e1e5ffaf351
 # Battle.net OAuth2 Demo
 
 A Node.js demonstration project showing how to implement Battle.net OAuth2 authentication with cookie consent management.
