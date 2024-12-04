@@ -78,21 +78,37 @@ app.get('/auth/bnet', (req, res) => {
 });
 
 app.get('/auth/callback', async (req, res) => {
-    console.log('Callback received:', {
-        code: req.query.code ? 'present' : 'missing',
+    debugger;
+    console.log('Callback received with full details:', {
+        code: req.query.code,
         state: req.query.state,
         error: req.query.error,
-        session_state: req.session?.state
+        session_state: req.session?.state,
+        session_exists: !!req.session,
+        headers: req.headers,
+        cookies: req.cookies
     });
     
     const { code, state, error } = req.query;
 
-    if (error || state !== req.session.state) {
-        return res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed`);
+    if (error) {
+        debugger;
+        console.error('Auth error received:', error);
+        return res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed&reason=${error}`);
+    }
+
+    if (state !== req.session.state) {
+        debugger;
+        console.error('State mismatch:', {
+            received: state,
+            expected: req.session.state
+        });
+        return res.redirect(`${process.env.FRONTEND_URL}/index.html?error=state_mismatch`);
     }
 
     try {
-        const response = await axios.post(BNET_TOKEN_URL, 
+        debugger;
+        const tokenResponse = await axios.post(BNET_TOKEN_URL, 
             new URLSearchParams({
                 grant_type: 'authorization_code',
                 code,
@@ -105,10 +121,17 @@ app.get('/auth/callback', async (req, res) => {
             }
         );
 
-        req.session.token = response.data.access_token;
+        debugger;
+        req.session.token = tokenResponse.data.access_token;
         res.redirect(`${process.env.FRONTEND_URL}/redirect-test.html`);
     } catch (error) {
-        res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed`);
+        debugger;
+        console.error('Token exchange failed:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed&reason=token_exchange`);
     }
 });
 
@@ -124,11 +147,14 @@ app.get('/auth/logout', (req, res) => {
 
 // WoW Character Profile endpoint
 app.get('/wow/character', async (req, res) => {
+    debugger;
     if (!req.session.token) {
+        debugger;
         return res.status(401).json({ error: 'Not authenticated' });
     }
 
     try {
+        debugger;
         const response = await axios.get(
             `${WOW_API_URL}/profile/wow/character/sanguino/thenift`, {
             headers: {
@@ -139,9 +165,22 @@ app.get('/wow/character', async (req, res) => {
                 locale: 'en_US'
             }
         });
+        debugger;
         res.json(response.data);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch character data' });
+        debugger;
+        if (error.response?.status === 401) {
+            req.session.token = null;
+            return res.status(401).json({ 
+                error: 'Authentication expired',
+                message: 'Please log in again'
+            });
+        }
+        
+        res.status(500).json({ 
+            error: 'Failed to fetch character data',
+            message: error.response?.data?.message || error.message
+        });
     }
 });
 

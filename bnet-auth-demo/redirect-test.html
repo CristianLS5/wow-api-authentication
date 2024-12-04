@@ -45,28 +45,46 @@
         }
 
         async function fetchCharacterProfile() {
+            debugger; // Breakpoint 12: Start of fetch
+            const characterDiv = document.getElementById('characterData');
+            characterDiv.innerHTML = '<p>Loading...</p>';
+            
             try {
                 const response = await fetch('https://wow-api-authentication-server.vercel.app/wow/character', {
                     credentials: 'include'
                 });
+                
+                debugger; // Breakpoint 13: After fetch response
                 const data = await response.json();
                 
-                const characterDiv = document.getElementById('characterData');
-                if (response.ok) {
-                    characterDiv.innerHTML = `
-                        <h3>${data.name}</h3>
-                        <p>Level: ${data.level}</p>
-                        <p>Race: ${data.race.name}</p>
-                        <p>Class: ${data.character_class.name}</p>
-                        <p>Realm: ${data.realm.name}</p>
-                    `;
-                } else {
-                    characterDiv.innerHTML = `<p class="error">Error: ${data.error}</p>`;
+                if (response.status === 401) {
+                    debugger; // Breakpoint 14: Unauthorized
+                    window.location.replace('/index.html?error=session_expired');
+                    return;
                 }
+                
+                if (!response.ok) {
+                    debugger; // Breakpoint 15: Other error
+                    throw new Error(data.message || 'Failed to fetch character');
+                }
+                
+                debugger; // Breakpoint 16: Success
+                characterDiv.innerHTML = `
+                    <h3>${data.name}</h3>
+                    <p>Level: ${data.level}</p>
+                    <p>Race: ${data.race.name}</p>
+                    <p>Class: ${data.character_class.name}</p>
+                    <p>Realm: ${data.realm.name}</p>
+                `;
             } catch (error) {
-                console.error('Failed to fetch character:', error);
-                document.getElementById('characterData').innerHTML = 
-                    '<p class="error">Failed to fetch character data</p>';
+                debugger; // Breakpoint 17: Error handling
+                console.error('Character fetch failed:', error);
+                characterDiv.innerHTML = `
+                    <p class="error">Error: ${error.message}</p>
+                    <button onclick="fetchCharacterProfile()" class="retry-button">
+                        Retry
+                    </button>
+                `;
             }
         }
 
