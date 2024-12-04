@@ -54,12 +54,11 @@ app.get('/auth/bnet', (req, res) => {
         client_id: process.env.BNET_CLIENT_ID,
         scope: 'wow.profile',
         state: state,
-        redirect_uri: process.env.BNET_REDIRECT_URI,
-        region: process.env.BNET_REGION,
-        locale: "en_GB",
+        redirect_uri: process.env.BNET_REDIRECT_URI
     });
 
     const authUrl = `${BNET_AUTH_URL}?${params.toString()}`;
+    console.log('Generated Auth URL:', authUrl);
     res.redirect(authUrl);
 });
 

@@ -32,7 +32,20 @@
         }
 
         function startAuth() {
-            window.location.href = 'https://wow-api-authentication-server.vercel.app/auth/bnet';
+            fetch('https://wow-api-authentication-server.vercel.app/auth/bnet', {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => {
+                console.error('Auth initialization failed:', error);
+            });
         }
     </script>
 </body>
