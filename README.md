@@ -62,22 +62,25 @@ SESSION_SECRET=your_session_secret
 
 ## Project Structure
 
-bnet-auth-demo/
-├── styles/
-│ ├── common.css
-│ ├── cookie-test.css
-│ ├── login.css
-│ └── redirect.css
-├── js/
-│ └── cookie-config.js
-├── index.html
-├── redirect-test.html
-├── cookie-test.html
-└── package.json
-bnet-auth-server/
-├── src/
-│ └── server.js
-└── package.json
+    .
+    bnet-auth-demo/
+    ├── styles/
+    │ ├── common.css
+    │ ├── cookie-test.css
+    │ ├── login.css
+    │ └── redirect.css
+    ├── js/
+    │ └── cookie-config.js
+    ├── index.html
+    ├── redirect-test.html
+    ├── cookie-test.html
+    └── package.json
+    bnet-auth-server/
+    ├── src/
+    │ └── server.js
+    └── package.json
+    └── ...
+  
 
 ## Features in Detail
 
