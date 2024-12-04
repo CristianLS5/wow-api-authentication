@@ -11,14 +11,15 @@ const port = process.env.PORT || 3000;
 // Session configuration
 app.use(session({
     name: 'bnet_session',
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
         secure: true,
         httpOnly: true,
         sameSite: 'none',
-        maxAge: 60 * 60 * 1000 // 1 hour by default
+        maxAge: 24 * 60 * 60 * 1000,
+        domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
     }
 }));
 
@@ -26,12 +27,20 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://wow-api-authentication.vercel.app');
+    const allowedOrigins = [
+        'https://wow-api-authentication.vercel.app',
+        'https://wow-api-authentication-server.vercel.app'
+    ];
+    
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
+    
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
 
-    // Handle preflight requests
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
@@ -46,6 +55,12 @@ const BNET_TOKEN_URL = 'https://oauth.battle.net/token';
 const WOW_API_URL = 'https://eu.api.blizzard.com';
 
 app.get('/auth/bnet', (req, res) => {
+    console.log('Environment:', {
+        CLIENT_ID: process.env.BNET_CLIENT_ID,
+        REDIRECT_URI: process.env.BNET_REDIRECT_URI,
+        NODE_ENV: process.env.NODE_ENV
+    });
+    
     const state = Math.random().toString(36).substring(7);
     req.session.state = state;
 
@@ -63,6 +78,13 @@ app.get('/auth/bnet', (req, res) => {
 });
 
 app.get('/auth/callback', async (req, res) => {
+    console.log('Callback received:', {
+        code: req.query.code ? 'present' : 'missing',
+        state: req.query.state,
+        error: req.query.error,
+        session_state: req.session?.state
+    });
+    
     const { code, state, error } = req.query;
 
     if (error || state !== req.session.state) {
