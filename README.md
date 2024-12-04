@@ -44,7 +44,7 @@ BNET_CLIENT_ID=your_client_id
 BNET_CLIENT_SECRET=your_client_secret
 BNET_REDIRECT_URI=http://localhost:3000/auth/callback
 FRONTEND_URL=http://localhost:4200
-BNET_REGION=eu
+BNET_REGION=your_region
 SESSION_SECRET=your_session_secret
 ```
 
@@ -66,12 +66,14 @@ bnet-auth-demo/
 ├── styles/
 │ ├── common.css
 │ ├── cookie-test.css
+│ ├── login.css
 │ └── redirect.css
 ├── js/
 │ └── cookie-config.js
 ├── index.html
 ├── redirect-test.html
-└── cookie-test.html
+├── cookie-test.html
+└── package.json
 bnet-auth-server/
 ├── src/
 │ └── server.js
