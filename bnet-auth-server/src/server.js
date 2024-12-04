@@ -50,11 +50,11 @@ app.get('/auth/bnet', (req, res) => {
     req.session.state = state;
 
     const params = new URLSearchParams({
-        response_type: 'code',
         client_id: process.env.BNET_CLIENT_ID,
         scope: 'wow.profile',
         state: state,
-        redirect_uri: process.env.BNET_REDIRECT_URI
+        redirect_uri: process.env.BNET_REDIRECT_URI,
+        response_type: 'code'
     });
 
     const authUrl = `${BNET_AUTH_URL}?${params.toString()}`;
