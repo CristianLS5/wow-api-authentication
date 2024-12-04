@@ -19,7 +19,7 @@ A demonstration project showing how to implement Battle.net OAuth2 authenticatio
 Before you begin, ensure you have:
 - [Node.js](https://nodejs.org/en)
 - A [Battle.net Developer Account](https://develop.battle.net)
-- Battle.net API credentials (Client ID and Secret)
+- [Battle.net API credentials](https://develop.battle.net/documentation/guides/getting-started) (Client ID and Secret)
 
 ## Installation
 
