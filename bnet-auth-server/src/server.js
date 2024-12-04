@@ -80,27 +80,21 @@ app.get('/auth/bnet', (req, res) => {
 });
 
 app.get('/auth/callback', async (req, res) => {
-    debugger;
-    console.log('Callback received with full details:', {
-        code: req.query.code,
-        state: req.query.state,
-        error: req.query.error,
-        session_state: req.session?.state,
-        session_exists: !!req.session,
+    console.log('Callback received:', {
+        timestamp: new Date().toISOString(),
+        query: req.query,
         headers: req.headers,
-        cookies: req.cookies
+        session: req.session
     });
     
     const { code, state, error } = req.query;
 
     if (error) {
-        debugger;
         console.error('Auth error received:', error);
         return res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed&reason=${error}`);
     }
 
     if (state !== req.session.state) {
-        debugger;
         console.error('State mismatch:', {
             received: state,
             expected: req.session.state
@@ -109,7 +103,6 @@ app.get('/auth/callback', async (req, res) => {
     }
 
     try {
-        debugger;
         const tokenResponse = await axios.post(BNET_TOKEN_URL, 
             new URLSearchParams({
                 grant_type: 'authorization_code',
@@ -123,11 +116,9 @@ app.get('/auth/callback', async (req, res) => {
             }
         );
 
-        debugger;
         req.session.token = tokenResponse.data.access_token;
         res.redirect(`${process.env.FRONTEND_URL}/redirect-test.html`);
     } catch (error) {
-        debugger;
         console.error('Token exchange failed:', {
             message: error.message,
             response: error.response?.data,
@@ -149,14 +140,11 @@ app.get('/auth/logout', (req, res) => {
 
 // WoW Character Profile endpoint
 app.get('/wow/character', async (req, res) => {
-    debugger;
     if (!req.session.token) {
-        debugger;
         return res.status(401).json({ error: 'Not authenticated' });
     }
 
     try {
-        debugger;
         const response = await axios.get(
             `${WOW_API_URL}/profile/wow/character/sanguino/thenift`, {
             headers: {
@@ -167,10 +155,8 @@ app.get('/wow/character', async (req, res) => {
                 locale: 'en_US'
             }
         });
-        debugger;
         res.json(response.data);
     } catch (error) {
-        debugger;
         if (error.response?.status === 401) {
             req.session.token = null;
             return res.status(401).json({ 
@@ -189,6 +175,25 @@ app.get('/wow/character', async (req, res) => {
 // Health check endpoint
 app.get('/', (req, res) => {
     res.json({ status: 'Server is running' });
+});
+
+// Add this to your server.js
+const logError = (error, context) => {
+    console.error(JSON.stringify({
+        timestamp: new Date().toISOString(),
+        context,
+        error: {
+            message: error.message,
+            stack: error.stack,
+            response: error.response?.data
+        }
+    }));
+};
+
+// Global error handler
+app.use((err, req, res, next) => {
+    logError(err, 'global');
+    res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(port, () => {
