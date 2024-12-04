@@ -147,12 +147,6 @@ Project Link: [https://github.com/CristianLS5/wow-api-authentication](https://gi
 - [Battle.net API Documentation](https://develop.battle.net/documentation)
 - [Vanilla Cookie Consent](https://cookieconsent.orestbida.com/)
 
-+ <div align="center" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-+   <img src="https://github.com/user-attachments/assets/8f027cba-aba3-442e-a415-e7d64d548bab" width="400" alt="Login Page">
-+   <img src="https://github.com/user-attachments/assets/b1d1b6be-ad5d-4cc0-8248-870751ebaaa7" width="400" alt="Cookie Consent">
-+   <img src="https://github.com/user-attachments/assets/25ac0365-1a93-4ff3-8bba-f3b235b7046e" width="400" alt="Character Profile">
-+ </div>
-
 ### Built With
 
 ![JavaScript]
