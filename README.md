@@ -11,9 +11,11 @@
 
 A demonstration project showing how to implement Battle.net OAuth2 authentication with cookie consent management.
 
-![wow-api-authentication-2](https://github.com/user-attachments/assets/8f027cba-aba3-442e-a415-e7d64d548bab)
-![wow-api-authentication-3](https://github.com/user-attachments/assets/b1d1b6be-ad5d-4cc0-8248-870751ebaaa7)
-![wow-api-authentication-1](https://github.com/user-attachments/assets/25ac0365-1a93-4ff3-8bba-f3b235b7046e)
++ <div align="center">
++   <img src="https://github.com/user-attachments/assets/8f027cba-aba3-442e-a415-e7d64d548bab" width="400" alt="Login Page">
++   <img src="https://github.com/user-attachments/assets/b1d1b6be-ad5d-4cc0-8248-870751ebaaa7" width="400" alt="Cookie Consent">
++   <img src="https://github.com/user-attachments/assets/25ac0365-1a93-4ff3-8bba-f3b235b7046e" width="400" alt="Character Profile">
++ </div>
 
 ## Table of Contents
 1. [Built With](#built-with)
