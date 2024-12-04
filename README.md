@@ -9,7 +9,7 @@
 
 # Battle.net OAuth2 Demo
 
-A demonstration project showing how to implement Battle.net OAuth2 authentication with cookie consent management.
+A Node.js demonstration project showing how to implement Battle.net OAuth2 authentication with cookie consent management.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/8f027cba-aba3-442e-a415-e7d64d548bab" width="400" alt="Login Page">
