@@ -62,7 +62,6 @@ SESSION_SECRET=your_session_secret
 
 ## Project Structure
 
-    .
     bnet-auth-demo/
     ├── styles/
     │ ├── common.css
@@ -79,8 +78,6 @@ SESSION_SECRET=your_session_secret
     ├── src/
     │ └── server.js
     └── package.json
-    └── ...
-  
 
 ## Features in Detail
 
