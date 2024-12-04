@@ -3,24 +3,20 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Session configuration
-app.use(session({
+app.use(cookieSession({
     name: 'bnet_session',
     secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'none',
-        maxAge: 24 * 60 * 60 * 1000,
-        domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
-    }
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: true,
+    httpOnly: true,
+    sameSite: 'none',
+    domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
 }));
 
 app.use(cookieParser());
