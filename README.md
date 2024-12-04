@@ -11,11 +11,11 @@
 
 A demonstration project showing how to implement Battle.net OAuth2 authentication with cookie consent management.
 
-+ <div align="center">
-+   <img src="https://github.com/user-attachments/assets/8f027cba-aba3-442e-a415-e7d64d548bab" width="400" alt="Login Page">
-+   <img src="https://github.com/user-attachments/assets/b1d1b6be-ad5d-4cc0-8248-870751ebaaa7" width="400" alt="Cookie Consent">
-+   <img src="https://github.com/user-attachments/assets/25ac0365-1a93-4ff3-8bba-f3b235b7046e" width="400" alt="Character Profile">
-+ </div>
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/8f027cba-aba3-442e-a415-e7d64d548bab" width="400" alt="Login Page">
+    <img src="https://github.com/user-attachments/assets/b1d1b6be-ad5d-4cc0-8248-870751ebaaa7" width="400" alt="Cookie Consent">
+    <img src="https://github.com/user-attachments/assets/25ac0365-1a93-4ff3-8bba-f3b235b7046e" width="400" alt="Character Profile">
+</div>
 
 ## Table of Contents
 1. [Built With](#built-with)
@@ -169,4 +169,4 @@ This project uses the following third-party libraries:
 [license-shield]: https://img.shields.io/github/license/CristianLS5/wow-api-authentication.svg?style=for-the-badge
 [license-url]: https://github.com/CristianLS5/wow-api-authentication/blob/master/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://www.linkedin.com/in/cristian-lopez-segarra/
+[linkedin-url]: https://www.linkedin.com/in/cristian-l%C3%B3pez-sol%C3%A1-2b6493204/?locale=en_US
