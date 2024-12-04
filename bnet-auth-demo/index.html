@@ -14,7 +14,7 @@
     <script>
         window.onload = async function() {
             try {
-                const response = await fetch('http://localhost:3000/auth/check', {
+                const response = await fetch('https://wow-api-authentication-server.vercel.app/auth/check', {
                     credentials: 'include'
                 });
                 const { isAuthenticated } = await response.json();
@@ -28,7 +28,7 @@
         }
 
         function startAuth() {
-            window.location.href = 'http://localhost:3000/auth/bnet';
+            window.location.href = 'https://wow-api-authentication-server.vercel.app/auth/bnet';
         }
     </script>
 </body>
