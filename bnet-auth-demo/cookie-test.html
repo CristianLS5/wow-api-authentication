@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cookie Test Page</title>
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/cookie-test.css">
+    <!-- Add Cookie Consent CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cookie Test Page</h1>
+        
+        <div class="header-actions">
+            <button type="button" data-cc="show-preferencesModal">Cookie Settings</button>
+        </div>
+
+        <div class="navigation-links">
+            <h2>Navigation Test</h2>
+            <p>Use these links to test cookie consent persistence:</p>
+            <ul>
+                <li><a href="index.html">Go to Home</a></li>
+                <li><a href="redirect-test.html">Go to Protected Page</a></li>
+                <li><a href="cookie-test.html">Reload This Page</a></li>
+            </ul>
+        </div>
+
+        <div class="cookie-info">
+            <h2>Cookie Status</h2>
+            <div id="cookieStatus"></div>
+        </div>
+    </div>
+
+    <!-- Add Cookie Consent JS -->
+    <script defer src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.umd.js"></script>
+    <script defer src="js/cookie-config.js"></script>
+    <script>
+        // Add a function to display cookie consent status
+        window.addEventListener('load', function() {
+            const cookieStatus = document.getElementById('cookieStatus');
+            
+            // Check if cookie consent is already given
+            const consentCookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('cc_cookie='));
+
+            if (consentCookie) {
+                try {
+                    const cookieValue = JSON.parse(decodeURIComponent(consentCookie.split('=')[1]));
+                    cookieStatus.innerHTML = `
+                        <p>Cookie consent has been given with the following preferences:</p>
+                        <ul>
+                            <li>Necessary cookies <span class="status-icon ${cookieValue.categories.includes('necessary') ? 'accepted' : 'rejected'}">
+                                ${cookieValue.categories.includes('necessary') ? '✓' : '✗'}</span></li>
+                            <li>Session cookies <span class="status-icon ${cookieValue.categories.includes('session') ? 'accepted' : 'rejected'}">
+                                ${cookieValue.categories.includes('session') ? '✓' : '✗'}</span></li>
+                            <li>Analytics cookies <span class="status-icon ${cookieValue.categories.includes('analytics') ? 'accepted' : 'rejected'}">
+                                ${cookieValue.categories.includes('analytics') ? '✓' : '✗'}</span></li>
+                        </ul>
+                    `;
+                } catch (e) {
+                    cookieStatus.innerHTML = '<p>Cookie consent has been given but details cannot be read.</p>';
+                }
+            } else {
+                cookieStatus.innerHTML = '<p>Waiting for cookie consent...</p>';
+            }
+        });
+    </script>
+</body>
+</html> 
