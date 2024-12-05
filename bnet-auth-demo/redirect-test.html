@@ -3,7 +3,7 @@
 <head>
     <title>Protected Page</title>
     <link rel="stylesheet" href="styles/common.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@3.0.1/dist/cookieconsent.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.css">
 </head>
 <body>
     <div class="container">
@@ -11,7 +11,7 @@
         
         <div class="header-actions">
             <button onclick="logout()" class="logout-button">Logout</button>
-            <button type="button" data-cc="show-preferencesModal">Cookie Settings</button>
+            <button type="button" data-cc="c-settings" class="cookie-settings-button">Cookie Settings</button>
             <button onclick="window.location.href='cookie-test.html'" class="nav-button">Cookie Test Page</button>
         </div>
 
@@ -25,16 +25,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/orestbida/cookieconsent@v3.0.0/dist/cookieconsent.umd.js"></script>
-    <script>
-        window.addEventListener('load', function(){
-            // Initialize cookie consent after page load
-            if (typeof CookieConsent !== 'undefined') {
-                const scriptElement = document.createElement('script');
-                scriptElement.src = 'js/cookie-config.js';
-                document.body.appendChild(scriptElement);
-            }
-        });
-    </script>
+    <script src="js/cookie-config.js"></script>
     <script>
         window.onload = async function() {
             try {
@@ -47,8 +38,18 @@
                     window.location.replace('/index.html');
                     return;
                 }
+
+                if (typeof CookieConsent !== 'undefined') {
+                    CookieConsent.run({
+                        onFirstAction: function(userPreferences, cookie) {
+                            console.log('User preferences on first action:', userPreferences);
+                        },
+                        onAccept: function(cookie) {
+                            console.log('Cookie consent was accepted:', cookie);
+                        }
+                    });
+                }
             } catch (error) {
-                console.error('Auth check failed:', error);
                 window.location.replace('/index.html');
             }
         }
