@@ -52,53 +52,74 @@ const BNET_AUTH_URL = 'https://oauth.battle.net/authorize';
 const BNET_TOKEN_URL = 'https://oauth.battle.net/token';
 const WOW_API_URL = 'https://eu.api.blizzard.com';
 
+// Initialize Battle.net OAuth
 app.get('/auth/bnet', (req, res) => {
-    console.log('Environment:', {
-        CLIENT_ID: process.env.BNET_CLIENT_ID,
-        REDIRECT_URI: process.env.BNET_REDIRECT_URI,
-        NODE_ENV: process.env.NODE_ENV
-    });
-    
-    const state = Math.random().toString(36).substring(7);
-    req.session.state = state;
+    try {
+        // Generate and store state for CSRF protection
+        const state = Math.random().toString(36).substring(7);
+        req.session.state = state;
+        
+        // Log the session state
+        console.log('Initializing auth with state:', {
+            state,
+            session_id: req.session.id,
+            timestamp: new Date().toISOString()
+        });
 
-    const params = new URLSearchParams({
-        client_id: process.env.BNET_CLIENT_ID,
-        scope: 'wow.profile',
-        state: state,
-        redirect_uri: process.env.BNET_REDIRECT_URI,
-        response_type: 'code'
-    });
+        // Construct auth URL
+        const params = new URLSearchParams({
+            client_id: process.env.BNET_CLIENT_ID,
+            scope: 'wow.profile',
+            state: state,
+            redirect_uri: process.env.BNET_REDIRECT_URI,
+            response_type: 'code'
+        });
 
-    const authUrl = `${BNET_AUTH_URL}?${params.toString()}`;
-    console.log('Generated Auth URL:', authUrl);
-    res.redirect(authUrl);
+        const authUrl = `${BNET_AUTH_URL}?${params.toString()}`;
+        
+        // Log the complete request
+        console.log('Auth request details:', {
+            auth_url: authUrl,
+            client_id: process.env.BNET_CLIENT_ID,
+            redirect_uri: process.env.BNET_REDIRECT_URI,
+            headers: req.headers
+        });
+
+        res.redirect(authUrl);
+    } catch (error) {
+        console.error('Auth initialization failed:', error);
+        res.redirect(`${process.env.FRONTEND_URL}?error=auth_init_failed`);
+    }
 });
 
+// Handle Battle.net OAuth callback
 app.get('/auth/callback', async (req, res) => {
     console.log('Callback received:', {
-        timestamp: new Date().toISOString(),
         query: req.query,
-        headers: req.headers,
-        session: req.session
+        session_state: req.session?.state,
+        timestamp: new Date().toISOString()
     });
-    
+
     const { code, state, error } = req.query;
 
+    // Handle OAuth errors
     if (error) {
-        console.error('Auth error received:', error);
-        return res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed&reason=${error}`);
+        console.error('OAuth error received:', error);
+        return res.redirect(`${process.env.FRONTEND_URL}?error=oauth_error&details=${error}`);
     }
 
-    if (state !== req.session.state) {
-        console.error('State mismatch:', {
-            received: state,
-            expected: req.session.state
+    // Validate state to prevent CSRF
+    if (!req.session?.state || state !== req.session.state) {
+        console.error('State validation failed:', {
+            expected: req.session?.state,
+            received: state
         });
-        return res.redirect(`${process.env.FRONTEND_URL}/index.html?error=state_mismatch`);
+        return res.redirect(`${process.env.FRONTEND_URL}?error=invalid_state`);
     }
 
     try {
+        // Exchange code for token
+        console.log('Exchanging code for token...');
         const tokenResponse = await axios.post(BNET_TOKEN_URL, 
             new URLSearchParams({
                 grant_type: 'authorization_code',
@@ -112,47 +133,81 @@ app.get('/auth/callback', async (req, res) => {
             }
         );
 
+        // Store token in session
         req.session.token = tokenResponse.data.access_token;
+        req.session.token_expiry = Date.now() + (tokenResponse.data.expires_in * 1000);
+
+        console.log('Token exchange successful:', {
+            expires_in: tokenResponse.data.expires_in,
+            token_type: tokenResponse.data.token_type
+        });
+
         res.redirect(`${process.env.FRONTEND_URL}/redirect-test.html`);
     } catch (error) {
         console.error('Token exchange failed:', {
-            message: error.message,
+            error: error.message,
             response: error.response?.data,
             status: error.response?.status
         });
-        res.redirect(`${process.env.FRONTEND_URL}/index.html?error=auth_failed&reason=token_exchange`);
+        res.redirect(`${process.env.FRONTEND_URL}?error=token_exchange_failed`);
     }
 });
 
+// Check authentication status
 app.get('/auth/check', (req, res) => {
-    res.json({ isAuthenticated: !!req.session.token });
+    const isAuthenticated = !!req.session?.token;
+    const tokenExpiry = req.session?.token_expiry;
+    const isExpired = tokenExpiry ? Date.now() > tokenExpiry : true;
+
+    res.json({ 
+        isAuthenticated,
+        isExpired,
+        expiresIn: tokenExpiry ? Math.floor((tokenExpiry - Date.now()) / 1000) : 0
+    });
 });
 
+// Logout endpoint
 app.get('/auth/logout', (req, res) => {
-    req.session.destroy(() => {
-        res.redirect(`${process.env.FRONTEND_URL}/index.html`);
-    });
+    req.session = null;
+    res.redirect(`${process.env.FRONTEND_URL}`);
 });
 
 // WoW Character Profile endpoint
 app.get('/wow/character', async (req, res) => {
-    if (!req.session.token) {
+    if (!req.session?.token) {
         return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    // Check token expiration
+    if (req.session.token_expiry && Date.now() > req.session.token_expiry) {
+        req.session.token = null;
+        return res.status(401).json({ 
+            error: 'Token expired',
+            message: 'Please log in again'
+        });
     }
 
     try {
         const response = await axios.get(
-            `${WOW_API_URL}/profile/wow/character/sanguino/thenift`, {
-            headers: {
-                'Authorization': `Bearer ${req.session.token}`
-            },
-            params: {
-                namespace: 'profile-eu',
-                locale: 'en_US'
+            `${WOW_API_URL}/profile/wow/character/sanguino/thenift`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${req.session.token}`
+                },
+                params: {
+                    namespace: 'profile-eu',
+                    locale: 'en_US'
+                }
             }
-        });
+        );
         res.json(response.data);
     } catch (error) {
+        console.error('Character fetch failed:', {
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message
+        });
+
         if (error.response?.status === 401) {
             req.session.token = null;
             return res.status(401).json({ 
@@ -171,25 +226,6 @@ app.get('/wow/character', async (req, res) => {
 // Health check endpoint
 app.get('/', (req, res) => {
     res.json({ status: 'Server is running' });
-});
-
-// Add this to your server.js
-const logError = (error, context) => {
-    console.error(JSON.stringify({
-        timestamp: new Date().toISOString(),
-        context,
-        error: {
-            message: error.message,
-            stack: error.stack,
-            response: error.response?.data
-        }
-    }));
-};
-
-// Global error handler
-app.use((err, req, res, next) => {
-    logError(err, 'global');
-    res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(port, () => {
