@@ -17,4 +17,34 @@ button {
 
 button:hover {
     background-color: #0062be;
+}
+
+/* Cookie consent styles */
+.required {
+    color: #d93025;
+    font-size: 0.8em;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+#cc-main {
+    font-family: inherit;
+    z-index: 1000;
+}
+
+#cc-main .cc-category {
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+#cc-main .cc-category .cc-title {
+    font-weight: bold;
+}
+
+#cc-main button {
+    border-radius: 4px;
+}
+
+#cc-main .cc-btn {
+    padding: 8px 16px;
 } 

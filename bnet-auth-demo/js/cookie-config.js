@@ -1,4 +1,7 @@
 CookieConsent.run({
+    root: 'body',
+    autoShow: true,
+    delay: 0,
     guiOptions: {
         consentModal: {
             layout: 'box',
@@ -15,14 +18,21 @@ CookieConsent.run({
     },
     categories: {
         necessary: {
-            enabled: true,  // this category is enabled by default
-            readOnly: true  // this category cannot be disabled
+            enabled: true,
+            readOnly: true
         },
         analytics: {},
         session: {
             enabled: true,
             readOnly: true
         }
+    },
+    cookie: {
+        name: 'cc_cookie',
+        domain: location.hostname,
+        path: '/',
+        sameSite: 'Lax',
+        expiresAfterDays: 365
     },
     language: {
         default: 'en',
