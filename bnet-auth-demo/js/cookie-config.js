@@ -1,8 +1,4 @@
-import * as CookieConsent from 'vanilla-cookieconsent/dist/core/cookieconsent-core.esm.js';
-
-const cc = CookieConsent;
-
-cc.run({
+CookieConsent.run({
     categories: {
         necessary: {
             enabled: true,
