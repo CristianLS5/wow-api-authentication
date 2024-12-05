@@ -147,14 +147,6 @@ Project Link: [https://github.com/CristianLS5/wow-api-authentication](https://gi
 - [Battle.net API Documentation](https://develop.battle.net/documentation)
 - [Vanilla Cookie Consent](https://cookieconsent.orestbida.com/)
 
-### Built With
-
-![JavaScript]
-![NodeJS]
-![Express.js]
-![HTML5]
-![CSS3]
-
 ## Third-Party Libraries
 
 This project uses the following third-party libraries:
