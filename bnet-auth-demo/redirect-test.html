@@ -45,7 +45,6 @@
         }
 
         async function fetchCharacterProfile() {
-            debugger; // Breakpoint 12: Start of fetch
             const characterDiv = document.getElementById('characterData');
             characterDiv.innerHTML = '<p>Loading...</p>';
             
@@ -60,21 +59,17 @@
                     mode: 'cors'
                 });
                 
-                debugger; // Breakpoint 13: After fetch response
                 const data = await response.json();
                 
                 if (response.status === 401) {
-                    debugger; // Breakpoint 14: Unauthorized
                     window.location.replace('/index.html?error=session_expired');
                     return;
                 }
                 
                 if (!response.ok) {
-                    debugger; // Breakpoint 15: Other error
                     throw new Error(data.message || 'Failed to fetch character');
                 }
                 
-                debugger; // Breakpoint 16: Success
                 characterDiv.innerHTML = `
                     <h3>${data.name}</h3>
                     <p>Level: ${data.level}</p>
@@ -83,8 +78,6 @@
                     <p>Realm: ${data.realm.name}</p>
                 `;
             } catch (error) {
-                debugger; // Breakpoint 17: Error handling
-                console.error('Character fetch failed:', error);
                 characterDiv.innerHTML = `
                     <p class="error">Error: ${error.message}</p>
                     <button onclick="fetchCharacterProfile()" class="retry-button">

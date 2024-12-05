@@ -24,20 +24,17 @@
                     mode: 'cors'
                 });
                 
-                console.log('Auth check response:', response);
                 const data = await response.json();
-                console.log('Auth check data:', data);
                 
                 if (data.isAuthenticated) {
                     window.location.replace('/redirect-test.html');
                 }
             } catch (error) {
-                console.error('Auth check failed:', error);
+                // Keep this error handler empty or handle silently
             }
         }
 
         function startAuth() {
-            // Add state to localStorage as backup
             const state = Math.random().toString(36).substring(7);
             localStorage.setItem('auth_state', state);
             
