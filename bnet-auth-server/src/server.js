@@ -16,7 +16,7 @@ app.use(cookieSession({
     secure: true,
     httpOnly: true,
     sameSite: 'none',
-    domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
+    domain: undefined
 }));
 
 app.use(cookieParser());
@@ -37,7 +37,8 @@ app.use((req, res, next) => {
     
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Expose-Headers', 'Set-Cookie');
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
@@ -46,6 +47,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+// Add proxy trust (important for secure cookies behind proxies)
+app.set('trust proxy', 1);
 
 // Battle.net OAuth endpoints
 const BNET_AUTH_URL = 'https://oauth.battle.net/authorize';
@@ -94,25 +98,33 @@ app.get('/auth/bnet', (req, res) => {
 
 // Handle Battle.net OAuth callback
 app.get('/auth/callback', async (req, res) => {
-    console.log('Callback received:', {
-        query: req.query,
-        session_state: req.session?.state,
-        timestamp: new Date().toISOString()
+    const { code, state, error } = req.query;
+    
+    console.log('Callback Debug:', {
+        receivedState: state,
+        sessionState: req.session?.state,
+        sessionExists: !!req.session,
+        cookies: req.cookies,
+        headers: req.headers
     });
 
-    const { code, state, error } = req.query;
-
-    // Handle OAuth errors
     if (error) {
-        console.error('OAuth error received:', error);
+        console.error('OAuth error:', error);
         return res.redirect(`${process.env.FRONTEND_URL}?error=oauth_error&details=${error}`);
     }
 
-    // Validate state to prevent CSRF
-    if (!req.session?.state || state !== req.session.state) {
-        console.error('State validation failed:', {
-            expected: req.session?.state,
-            received: state
+    if (!state || !req.session?.state) {
+        console.error('Missing state:', {
+            receivedState: state,
+            sessionState: req.session?.state
+        });
+        return res.redirect(`${process.env.FRONTEND_URL}?error=missing_state`);
+    }
+
+    if (state !== req.session.state) {
+        console.error('State mismatch:', {
+            receivedState: state,
+            sessionState: req.session.state
         });
         return res.redirect(`${process.env.FRONTEND_URL}?error=invalid_state`);
     }
@@ -144,11 +156,7 @@ app.get('/auth/callback', async (req, res) => {
 
         res.redirect(`${process.env.FRONTEND_URL}/redirect-test.html`);
     } catch (error) {
-        console.error('Token exchange failed:', {
-            error: error.message,
-            response: error.response?.data,
-            status: error.response?.status
-        });
+        console.error('Token exchange error:', error);
         res.redirect(`${process.env.FRONTEND_URL}?error=token_exchange_failed`);
     }
 });

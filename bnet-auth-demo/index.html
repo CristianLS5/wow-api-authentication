@@ -23,9 +23,12 @@
                     },
                     mode: 'cors'
                 });
-                const { isAuthenticated } = await response.json();
                 
-                if (isAuthenticated) {
+                console.log('Auth check response:', response);
+                const data = await response.json();
+                console.log('Auth check data:', data);
+                
+                if (data.isAuthenticated) {
                     window.location.replace('/redirect-test.html');
                 }
             } catch (error) {
@@ -34,6 +37,10 @@
         }
 
         function startAuth() {
+            // Add state to localStorage as backup
+            const state = Math.random().toString(36).substring(7);
+            localStorage.setItem('auth_state', state);
+            
             window.location.href = 'https://wow-api-authentication-server.vercel.app/auth/bnet';
         }
     </script>
